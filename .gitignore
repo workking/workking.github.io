@@ -1,0 +1,18 @@
+# OSX
+#
+.DS_Store
+
+# env
+#
+.env
+
+# node.js
+#
+node_modules/
+package-lock.json
+
+# assets
+#
+dist/scripts
+dist/styles
+dist/gov_data.js
