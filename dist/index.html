@@ -31,17 +31,17 @@
         <div class="col-sm-8 h-100 px-0 d-flex flex-column border-right">
           <nav class="navbar navbar-light border-bottom bg-light">
             <a class="navbar-brand p-1" href="#">Virus Search</a>
-            <small class="text-muted ml-auto">Last update: 2020-07-28</small>
+            <small class="text-muted ml-auto">最後更新 - 2020-07-28</small>
           </nav>
           <form class="mt-3 px-3 border-bottom">
             <div class="form-group">
-              <textarea id="input-area" class="form-control" placeholder="Paste Here"></textarea>
+              <textarea id="input-area" class="form-control" placeholder="輸入地址"></textarea>
             </div>
           </form>
           <div id="result-container" class="flex-fill table-responsive"></div>
-          <nav class="navbar navbar-light border-top bg-light form-inline">
+          <!-- <nav class="navbar navbar-light border-top bg-light form-inline">
             <button class="btn btn-primary ml-auto">Export</button>
-          </nav>
+          </nav> -->
         </div>
         <!-- End of - Column paste content -->
 
@@ -53,9 +53,9 @@
                 <option value="chi">中</option>
                 <option value="eng">英</option>
               </select>
-              <input class="form-control" placeholder="building"/>
+              <input class="form-control" placeholder="輸入地址"/>
               <div class="input-group-append">
-                <button class="btn btn-success">Find</button>
+                <button class="btn btn-success">搜索</button>
               </div>
             </form>
           </nav>
@@ -69,10 +69,35 @@
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="./scripts/lib.min.js"></script>
-    <script src="gov_data.js"></script>
+    <script src="./scripts/gov_data_chi.js"></script>
+    <script src="./scripts/gov_data_eng.js"></script>
     <script type="text/javascript">
 
       $(document).ready(function() {
+
+        const fields = {
+          district: {
+            eng: 'District',
+            chi: '地區'
+          },
+          building: {
+            eng: 'Building name',
+            chi: '大廈名單'
+          },
+          date: {
+            eng: 'Last date of residence of the case(s)',
+            chi: '最後個案居住日期'
+          },
+          cases: {
+            eng: 'Related probable/confirmed cases',
+            chi: '相關疑似/確診個案'
+          }
+        };
+
+        var GOV_DATA = {
+          chi: gov_data_chi.map(item => convertResultItem(item, 'chi')),
+          eng: gov_data_eng.map(item => convertResultItem(item, 'eng')),
+        };
 
         var addressByLocale = {};
         var addressConcatByLocale = {};
@@ -88,6 +113,12 @@
         var $resultContainer = $('#result-container');
         var $rawContainer = $('#raw-container');
         var $searchFormRaw = $('#searchFormRaw');
+
+        $inputArea.bind('paste', function(e) {
+          setTimeout(function () {
+            $inputArea.trigger('change');
+          }, 10);
+        });
 
         // on paste content input
         $inputArea.change(function(e) {
@@ -119,16 +150,19 @@
           $resultContainer.find('td').each(function() {
             var $this = $(this);
             var cellContent = $this.html();
+
+            // first break strinng to by space
+            var stringConponent = cellContent.replace(/([^\u0000-\u00ff]{1})/g, '$1 ').split(' ');
             
             // get score
-            // var engMatches = getSearchResult(cellContent.split(' '), ' ', addressConcatByLocale.eng);
-            // for (var match of engMatches) {
-            //   cellContent = cellContent.replace(match.text, createHighlightAnchor(match.text, 'archor-match bg-warning text-dark', 'eng'));
-            // }
+            var engMatches = getSearchResult(stringConponent, ' ', addressConcatByLocale.eng);
+            var chiMatches = getSearchResult(stringConponent, '', addressConcatByLocale.chi);
 
-            var chiMatches = getSearchResult(cellContent.split(''), '', addressConcatByLocale.chi);
+            for (var match of engMatches) {
+              cellContent = cellContent.replace(match.text, createHighlightAnchor(match.text, getMatchAnchorClass(match.combo.length), 'eng'));
+            }
             for (var match of chiMatches) {
-              cellContent = cellContent.replace(match.text, createHighlightAnchor(match.text, 'archor-match bg-warning text-dark', 'chi'));
+              cellContent = cellContent.replace(match.text, createHighlightAnchor(match.text, getMatchAnchorClass(match.combo.length), 'chi'));
             }
 
             $this.html(cellContent);
@@ -179,38 +213,52 @@
         }
 
 
+
         /**
          * Table building functions
          **/
         function buildGridTable(tableContentGrid) {
-          return $('<table></table>')
+          return $('<table/>')
           .addClass('table table-striped table-sm table-bordered')
-          .append($('<tbody></tbody>')
+          .append($('<tbody/>')
             .append($.map(tableContentGrid, buildGridTableRow))
           );
         }
 
         function buildGridTableRow(contentRow) {
-          return $('<tr></tr>')
+          return $('<tr/>')
           .data('content', contentRow)
           .append($.map(contentRow, buildGridTableCell));
         }
 
         function buildGridTableCell(contentItem) {
-          return $('<td></td>').html(contentItem);
+          return $('<td/>').text(contentItem);
         }
 
         function createHighlightAnchor(text, className, locale) {
-          return $('<a></a>').attr('href', '#')
+          return $('<a>').attr('href', '#')
           .attr('data-locale', locale)
+          .addClass('archor-match')
           .addClass(className)
-          .html(text)
+          .text(text)
           .prop('outerHTML');
         }
 
+        function getMatchAnchorClass(length) {
+          return length > 3 ? 'text-light bg-danger' : 'text-dark bg-warning';
+        }
+
+        function convertResultItem(item, locale) {
+          return {
+            district: item[fields.district[locale]],
+            building: item[fields.building[locale]],
+            date:     item[fields.date[locale]],
+            cases:    item[fields.cases[locale]]
+          }
+        }
 
         /**
-         * Scoring function
+         * Searching function
          **/
         function getSearchResult(keywordComponents, comboJoin, searchFromString) {
           var results = [];
