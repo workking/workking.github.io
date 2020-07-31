@@ -156,9 +156,9 @@
             var cellContent = $this.html();
 
             // first break strinng to by space
-            var stringConponent = cellContent.replace(/([^\u0000-\u00ff]{1})/g, '$1 ').split(' ');
-            
-            // get score
+            var stringConponent = cellContent.replace(/([^\u0000-\u00ff]{1})/g, '$1 ').replace(/ {2,}/g,' ').trim().split(' ');
+
+            // get match
             var engMatches = getSearchResult(stringConponent, ' ', addressConcatByLocale.eng);
             var chiMatches = getSearchResult(stringConponent, '', addressConcatByLocale.chi);
 
@@ -216,8 +216,6 @@
           $rawContainer.empty().append(buildGridTable(rawTableGrid));
         }
 
-
-
         /**
          * Table building functions
          **/
@@ -267,8 +265,10 @@
         function getSearchResult(keywordComponents, comboJoin, searchFromString) {
           var results = [];
           var combo = [];
-          for (var i in keywordComponents) {
-            combo.push(keywordComponents[i]);
+          var searchComponents = keywordComponents.concat('END_OF_COMPONENTS');
+          
+          for (var i in searchComponents) {
+            combo.push(searchComponents[i]);
             var comboString = escapeRegExp(combo.join(comboJoin));
             var search = searchFromString.search(comboString);
             if (search === -1) {
