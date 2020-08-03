@@ -19,7 +19,7 @@
 		    white-space: nowrap;
       }
     </style>
-    <title>Virus Search</title>
+    <title>過去14 天檢疫大廈 搜尋器</title>
   </head>
   <body>
 
@@ -30,8 +30,8 @@
         <!-- Column paste content -->
         <div class="col-sm-8 h-100 px-0 d-flex flex-column border-right">
           <nav class="navbar navbar-light border-bottom bg-light">
-            <a class="navbar-brand p-1" href="#">Virus Search</a>
-            <small class="text-muted ml-auto">最後更新 2020-07-31</small>
+            <a class="navbar-brand p-1" href="#">過去14 天檢疫大廈 搜尋器</a>
+            <small class="text-muted ml-auto">更新 <!-- build:last_update -->2020-08-03<!-- endbuild --></small>
           </nav>
           <form class="mt-3 px-3 border-bottom">
             <div class="form-group">
@@ -40,13 +40,11 @@
           </form>
           <div id="result-container" class="flex-fill table-responsive">
             <div class="text-center my-4">
-              <img src="./workking_logo.png" /><br/>
-              <small class="text-muted">Powered By Workking</small>
+              <img src="./workking_logo.png" />
+              <span class="text-muted d-block mt-3">Powered By Workking</span>
+              <a href="#termsAndConditionsModal" data-toggle="modal" data-target="#termsAndConditionsModal">條款和條件</a>
             </div>
           </div>
-          <!-- <nav class="navbar navbar-light border-top bg-light form-inline">
-            <button class="btn btn-primary ml-auto">Export</button>
-          </nav> -->
         </div>
         <!-- End of - Column paste content -->
 
@@ -70,6 +68,32 @@
         
       </div>
 
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="termsAndConditionsModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">條款和條件</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p class="h4">重要公告</p>
+            <p>使用本網站前，請仔細閱讀以下的條款及條件。如你使用本網站，即表示你同意遵守下列所有條款及條件。</p>
+            <p class="h4">免責聲明</p>
+            <p>本網站載列的資料由毅盛企業顧問有限公司Eris 編製，作一般資訊及參考之用。Eris已盡力確保本網站的資料準確無誤，不過，對在任何情況下使用該等資料的準確性或恰當性，Eris 並沒有作出任何明示或隱含的陳述、申述、保證或擔保。</p>
+            <p>對於因或就本網站所載的資料（包括數據或程式）而引起的任何損失或損害，Eris 並不承擔任何責任。Eris保留權利，可隨時運用其絕對酌情權，定權，省略、暫停或編輯本網站所載的資料，而無須給予任何理由，亦無須事先通知。</p>
+            <p>本網站內的網站連結，只供參考之用。使用者宜透過其他資料來源，核對從本網站取得的資料。Eris不會對任何人使用或涉及使用該等資料所引致的損失或損害負責。任何關於連結網站的疑問，應直接向有關網站的負責人提出。</p>
+            <p>Eris對於因本網站的資訊、因複製或因發佈本網站資訊而引致的任何損失或損毁，將不會負上任何責任。</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
