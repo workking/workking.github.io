@@ -146,15 +146,22 @@ $(document).ready(function() {
     var locale = $searchFormRaw.find('select').val();
     var keyword = $searchFormRaw.find('input').val();
 
+    var join = locale === 'eng' ? ' ' : '';
+    var findString = prepareSearchComponent(keyword).join(join);
+
     // build raw table
     var rawTableGrid = $.map(GOV_DATA[locale], function(item) {
       var row = [item.district, item.building, item.date, item.cases];
 
-      if (!keyword || !item.building) {
+      if (!findString || !item.building) {
         return [row];
       }
 
-      if (item.building.toLowerCase().search(escapeRegExp(keyword)) === -1) {
+      if (item.building
+        .replace(/\,/g, '')
+        .replace(/\s{2,}/g,' ')
+        .toLowerCase()
+        .search(findString) === -1) {
         return null;
       }
 
