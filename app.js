@@ -147,7 +147,7 @@ $(document).ready(function() {
     var keyword = $searchFormRaw.find('input').val();
 
     var join = locale === 'eng' ? ' ' : '';
-    var findString = prepareSearchComponent(keyword).join(join);
+    var findString = prepareSearchComponent(keyword.toLowerCase()).join(join);
 
     // build raw table
     var rawTableGrid = $.map(GOV_DATA[locale], function(item) {
